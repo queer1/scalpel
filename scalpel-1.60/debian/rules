@@ -1,0 +1,33 @@
+#!/usr/bin/make -f
+
+build: build-stamp
+build-stamp:
+	$(MAKE)
+	touch $@
+
+install: build
+	dh_clean -k
+
+clean:
+	rm -f build-stamp
+	dh_clean
+	-$(MAKE) clean
+
+binary-indep:
+
+binary-arch binary: build install
+	dh_install 
+	dh_installchangelogs
+	dh_installdocs
+	dh_installman scalpel.1
+	dh_installchangelogs changelog
+	dh_installdeb
+	dh_compress
+	dh_fixperms
+	dh_strip
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+.PHONY: build binary binary-arch binary-indep clean install
